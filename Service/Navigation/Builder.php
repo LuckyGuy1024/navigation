@@ -4,6 +4,9 @@ namespace MageSuite\Navigation\Service\Navigation;
 
 class Builder implements BuilderInterface
 {
+    const TYPE_DESKTOP = 'desktop';
+    const TYPE_MOBILE = 'mobile';
+
     /**
      * @var \MageSuite\Navigation\Model\Navigation\ItemFactory
      */
@@ -33,7 +36,7 @@ class Builder implements BuilderInterface
     /**
      * @inheritdoc
      */
-    public function build($rootCategoryId)
+    public function build($rootCategoryId, $navigationType = self::TYPE_DESKTOP)
     {
         $navigationItems = [];
 
@@ -42,17 +45,17 @@ class Builder implements BuilderInterface
 
         /** @var \Magento\Catalog\Model\Category $category */
         foreach($childCategories as $category) {
-            if(!$category->getIncludeInMenu()) {
+            if(!$this->isVisible($category, $navigationType)) {
                 continue;
             }
 
-            $navigationItems[] = $this->buildNavigationItemsTree($category);
+            $navigationItems[] = $this->buildNavigationItemsTree($category, $navigationType);
         }
 
         return $navigationItems;
     }
 
-    protected function buildNavigationItemsTree(\Magento\Catalog\Model\Category $category) {
+    protected function buildNavigationItemsTree(\Magento\Catalog\Model\Category $category, $navigationType = self::TYPE_DESKTOP) {
         $navigationItem = $this->itemFactory->create(['category' => $category]);
 
         if(!$category->hasChildren()) {
@@ -64,7 +67,7 @@ class Builder implements BuilderInterface
         $subItems = [];
 
         foreach($this->getChildrenCategories($category) as $childCategory) {
-            if(!$childCategory->getIncludeInMenu()) {
+            if(!$this->isVisible($childCategory, $navigationType)) {
                 continue;
             }
 
@@ -99,6 +102,7 @@ class Builder implements BuilderInterface
         $categories->addAttributeToSelect([
             'parent_id',
             'include_in_menu',
+            'include_in_mobile_navigation',
             'do_not_expand_flyout',
             'category_custom_url',
             'category_identifier',
@@ -115,5 +119,13 @@ class Builder implements BuilderInterface
         $categories->load();
 
         return $categories;
+    }
+
+    protected function isVisible($category, $navigationType = self::TYPE_DESKTOP) {
+        if($navigationType == self::TYPE_MOBILE) {
+            return $category->getIncludeInMobileNavigation();
+        }
+
+        return $category->getIncludeInMenu();
     }
 }

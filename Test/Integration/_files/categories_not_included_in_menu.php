@@ -9,7 +9,7 @@ $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 $category = $objectManager->create('Magento\Catalog\Model\Category');
 $category->isObjectNew(true);
 $category->setId(13)
-    ->setName('Not included in menu')
+    ->setName('Not included in desktop menu')
     ->setParentId(2)
     ->setPath('1/2/13')
     ->setLevel(2)
@@ -17,6 +17,23 @@ $category->setId(13)
     ->setDefaultSortBy('name')
     ->setIsActive(true)
     ->setIncludeInMenu(false)
+    ->setPosition(1)
+    ->save()
+    ->reindex();
+
+/** @var $category \Magento\Catalog\Model\Category */
+$category = $objectManager->create('Magento\Catalog\Model\Category');
+$category->isObjectNew(true);
+$category->setId(13)
+    ->setName('Included only in mobile menu')
+    ->setParentId(2)
+    ->setPath('1/2/13')
+    ->setLevel(2)
+    ->setAvailableSortBy('name')
+    ->setDefaultSortBy('name')
+    ->setIsActive(true)
+    ->setIncludeInMenu(false)
+    ->setIncludeInMobileNavigation(true)
     ->setPosition(1)
     ->save()
     ->reindex();

@@ -5,7 +5,7 @@ namespace MageSuite\Navigation\Model\Navigation;
 class Item extends \Magento\Framework\DataObject
 {
     /**
-     * @var \Magento\Catalog\Api\Data\CategoryInterface
+     * @var \Magento\Catalog\Model\Category
      */
     protected $category;
 
@@ -34,11 +34,17 @@ class Item extends \Magento\Framework\DataObject
      */
     protected $customUrlGenerator;
 
+    /**
+     * @var \MageSuite\Category\Helper\Category
+     */
+    protected $categoryHelper;
+
     public function __construct(
         \Magento\Catalog\Api\Data\CategoryInterface $category,
         FeaturedProductsFactory $featuredProductsFactory,
         ImageTeaserFactory $imageTeaserFactory,
         \MageSuite\Navigation\Service\Category\CustomUrlGenerator $customUrlGenerator,
+        \MageSuite\Category\Helper\Category $categoryHelper,
         array $data = []
     )
     {
@@ -48,6 +54,7 @@ class Item extends \Magento\Framework\DataObject
         $this->featuredProductsFactory = $featuredProductsFactory;
         $this->imageTeaserFactory = $imageTeaserFactory;
         $this->customUrlGenerator = $customUrlGenerator;
+        $this->categoryHelper = $categoryHelper;
     }
 
     /**
@@ -87,6 +94,10 @@ class Item extends \Magento\Framework\DataObject
         }
 
         return $this->customUrlGenerator->generate($customUrl);
+    }
+
+    public function getProductCount() {
+        return $this->categoryHelper->getProductCount($this->category);
     }
 
     /**

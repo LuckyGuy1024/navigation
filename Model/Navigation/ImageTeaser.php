@@ -10,19 +10,27 @@ class ImageTeaser extends \Magento\Framework\DataObject
      * @var \Magento\Catalog\Model\Category
      */
     protected $category;
+
     /**
      * @var \MageSuite\Navigation\Service\Category\CustomUrlGenerator
      */
     protected $customUrlGenerator;
+
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
 
+    /**
+     * @var \MageSuite\Media\Service\SrcSetResolver
+     */
+    protected $srcSetResolver;
+
     public function __construct(
         \Magento\Catalog\Model\Category $category,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \MageSuite\Navigation\Service\Category\CustomUrlGenerator $customUrlGenerator,
+        \MageSuite\Media\Service\SrcSetResolver $srcSetResolver,
         array $data = []
     )
     {
@@ -31,6 +39,7 @@ class ImageTeaser extends \Magento\Framework\DataObject
         $this->category = $category;
         $this->customUrlGenerator = $customUrlGenerator;
         $this->storeManager = $storeManager;
+        $this->srcSetResolver = $srcSetResolver;
     }
 
     /**
@@ -67,7 +76,7 @@ class ImageTeaser extends \Magento\Framework\DataObject
      */
     public function getHeadline()
     {
-        return $this->category->getImageTeaserHeadline();
+        return $this->category->getImageTeaserHeadline() ?? '';
     }
 
     /**
@@ -75,7 +84,7 @@ class ImageTeaser extends \Magento\Framework\DataObject
      */
     public function getSubHeadline()
     {
-        return $this->category->getImageTeaserSubheadline();
+        return $this->category->getImageTeaserSubheadline() ?? '';
 
     }
 
@@ -84,7 +93,7 @@ class ImageTeaser extends \Magento\Framework\DataObject
      */
     public function getParagraph()
     {
-        return $this->category->getImageTeaserParagraph();
+        return $this->category->getImageTeaserParagraph() ?? '';
     }
 
     /**
@@ -92,7 +101,7 @@ class ImageTeaser extends \Magento\Framework\DataObject
      */
     public function getButtonLabel()
     {
-        return $this->category->getImageTeaserButtonLabel();
+        return $this->category->getImageTeaserButtonLabel() ?? '';
     }
 
     /**
@@ -108,6 +117,8 @@ class ImageTeaser extends \Magento\Framework\DataObject
      */
     public function getSrcSet()
     {
+        $imageTeaserUrl = $this->getImageUrl();
 
+        return $imageTeaserUrl ? $this->srcSetResolver->resolveSrcSetByDensity($imageTeaserUrl) : '';
     }
 }

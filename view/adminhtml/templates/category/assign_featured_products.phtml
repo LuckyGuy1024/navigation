@@ -1,0 +1,23 @@
+<?php
+/** @var \MageSuite\Navigation\Block\Adminhtml\Category\AssignFeaturedProducts $block */
+
+/** @var \MageSuite\Navigation\Block\Adminhtml\Category\Tab\FeaturedProducts $blockGrid */
+$blockGrid = $block->getBlockGrid();
+$gridJsObjectName = $blockGrid->getJsObjectName();
+?>
+<?php  echo $block->getGridHtml(); ?>
+<input type="hidden" name="featured_products" id="in_category_featured_products" data-form-part="category_form" value="" />
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Creativestyle_FrontendExtension/catalog/category/assign-featured-products": {
+                "selectedFeaturedProducts": <?php /* @escapeNotVerified */ echo $block->getFeaturedProductsJson(); ?>,
+                "gridJsObjectName": <?php /* @escapeNotVerified */ echo '"' . $gridJsObjectName . '"' ?: '{}'; ?>
+            }
+        }
+    }
+</script>
+<!-- @todo remove when "UI components" will support such initialization -->
+<script>
+    require('mage/apply/main').apply();
+</script>
