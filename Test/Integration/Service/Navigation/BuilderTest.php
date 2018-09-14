@@ -31,35 +31,35 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture loadCategoriesNotIncludedInMenu
      * @magentoCache all disabled
      */
-//    public function testItReturnsNavigationCorrectStructure() {
-//        $navigation = $this->builder->build(self::ROOT_CATEGORY_ID);
-//
-//        $this->assertCount(7, $navigation);
-//
-//        $this->assertCount(1, $navigation[0]->getSubItems());
-//
-//        $this->assertEquals('Category 1', $navigation[0]->getLabel());
-//        $this->assertEquals('Category 2', $navigation[1]->getLabel());
-//        $this->assertEquals('Category 1.1', $navigation[0]->getSubItems()[0]->getLabel());
-//        $this->assertEquals('Category 1.1.1', $navigation[0]->getSubItems()[0]->getSubItems()[0]->getLabel());
-//
-//        $this->assertEquals(2, $navigation[0]->getParentId());
-//
-//        $this->assertEquals(2, $navigation[0]->getProductCount());
-//        $this->assertEquals(0, $navigation[1]->getProductCount());
-//
-//        $this->assertEquals('http://localhost/index.php/category-1.html', $navigation[0]->getUrl());
-//
-//        $this->assertEquals(
-//            'http://localhost/index.php/category-1/category-1-1.html',
-//            $navigation[0]->getSubItems()[0]->getUrl()
-//        );
-//
-//        $this->assertEquals(
-//            'http://localhost/index.php/category-1/category-1-1/category-1-1-1.html',
-//            $navigation[0]->getSubItems()[0]->getSubItems()[0]->getUrl()
-//        );
-//    }
+    public function testItReturnsNavigationCorrectStructure() {
+        $navigation = $this->builder->build(self::ROOT_CATEGORY_ID);
+
+        $this->assertCount(7, $navigation);
+
+        $this->assertCount(1, $navigation[0]->getSubItems());
+
+        $this->assertEquals('Category 1', $navigation[0]->getLabel());
+        $this->assertEquals('Category 2', $navigation[1]->getLabel());
+        $this->assertEquals('Category 1.1', $navigation[0]->getSubItems()[0]->getLabel());
+        $this->assertEquals('Category 1.1.1', $navigation[0]->getSubItems()[0]->getSubItems()[0]->getLabel());
+
+        $this->assertEquals(2, $navigation[0]->getParentId());
+
+        $this->assertEquals(2, $navigation[0]->getProductCount());
+        $this->assertEquals(0, $navigation[1]->getProductCount());
+
+        $this->assertEquals('http://localhost/index.php/category-1.html', $navigation[0]->getUrl());
+
+        $this->assertEquals(
+            'http://localhost/index.php/category-1/category-1-1.html',
+            $navigation[0]->getSubItems()[0]->getUrl()
+        );
+
+        $this->assertEquals(
+            'http://localhost/index.php/category-1/category-1-1/category-1-1-1.html',
+            $navigation[0]->getSubItems()[0]->getSubItems()[0]->getUrl()
+        );
+    }
 
     /**
      * @magentoAppIsolation enabled
@@ -74,6 +74,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
             \MageSuite\Navigation\Service\Navigation\Builder::TYPE_MOBILE
         );
 
+        $this->assertCount(9, $navigation);
     }
 
     /**
@@ -83,17 +84,17 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture loadCategoriesWithProducts
      * @magentoCache all disabled
      */
-//    public function testItReturnsNavigationCorrectSorting()
-//    {
-//        $result = $this->builder->build(3311);
-//
-//        $sortedCategories = $result[0]->getSubItems();
-//
-//        $this->assertEquals($sortedCategories[0]->getLabel(), 'Ä Fourth subcategory');
-//        $this->assertEquals($sortedCategories[1]->getLabel(), 'A Second subcategory');
-//        $this->assertEquals($sortedCategories[2]->getLabel(), 'B Third subcategory');
-//        $this->assertEquals($sortedCategories[3]->getLabel(), 'C First subcategory');
-//    }
+    public function testItReturnsNavigationCorrectSorting()
+    {
+        $result = $this->builder->build(3311);
+
+        $sortedCategories = $result[0]->getSubItems();
+
+        $this->assertEquals($sortedCategories[0]->getLabel(), 'Ä Fourth subcategory');
+        $this->assertEquals($sortedCategories[1]->getLabel(), 'A Second subcategory');
+        $this->assertEquals($sortedCategories[2]->getLabel(), 'B Third subcategory');
+        $this->assertEquals($sortedCategories[3]->getLabel(), 'C First subcategory');
+    }
 
 
     /**
@@ -103,21 +104,21 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture loadCategoriesWithCustomAttributes
      * @magentoCache all disabled
      */
-//    public function testItReturnsCategoriesWithCorrectAttributes() {
-//        $result = $this->builder->build(self::ROOT_CATEGORY_ID);
-//
-//        $this->assertCount(10, $result);
-//
-//        $this->assertEquals('http://localhost/index.php/testurl.html', $result[8]->getUrl());
-//        $this->assertEquals('http://localhost/index.php/testurl.html', $result[9]->getUrl());
-//        $this->assertEquals('cat14', $result[8]->getIdentifier());
-//        $this->assertEquals('cat15', $result[9]->getIdentifier());
-//
-//        $featuredProducts = $result[9]->getFeaturedProducts();
-//        $this->assertEquals('Featured Products Header', $featuredProducts->getHeader());
-//        $this->assertCount(2, $featuredProducts->getProducts());
-//        $this->assertEquals('Second product', $featuredProducts->getProducts()[556]->getName());
-//    }
+    public function testItReturnsCategoriesWithCorrectAttributes() {
+        $result = $this->builder->build(self::ROOT_CATEGORY_ID);
+
+        $this->assertCount(10, $result);
+
+        $this->assertEquals('http://localhost/index.php/testurl.html', $result[8]->getUrl());
+        $this->assertEquals('http://localhost/index.php/testurl.html', $result[9]->getUrl());
+        $this->assertEquals('cat14', $result[8]->getIdentifier());
+        $this->assertEquals('cat15', $result[9]->getIdentifier());
+
+        $featuredProducts = $result[9]->getFeaturedProducts();
+        $this->assertEquals('Featured Products Header', $featuredProducts->getHeader());
+        $this->assertCount(2, $featuredProducts->getProducts());
+        $this->assertEquals('Second product', $featuredProducts->getProducts()[556]->getName());
+    }
 
     /**
      * @magentoAppIsolation enabled
@@ -126,26 +127,26 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture loadCategoriesWithCustomAttributes
      * @magentoCache all disabled
      */
-//    public function testItReturnsNavigationWithImageTeaser() {
-//        $result = $this->builder->build(2);
-//
-//        $navigationItem = $result[9];
-//
-//        $this->assertEquals(15, $navigationItem->getId());
-//
-//        $imageTeaser = $navigationItem->getImageTeaser();
-//
-//        $this->assertTrue($navigationItem->hasImageTeaser());
-//        $this->assertEquals('http://localhost/pub/media/catalog/category/teaser.png', $imageTeaser->getImageUrl());
-//        $this->assertEquals('Image Teaser Headline', $navigationItem->getImageTeaser()->getHeadline());
-//        $this->assertEquals('Image Teaser Paragraph', $navigationItem->getImageTeaser()->getParagraph());
-//        $this->assertEquals('http://localhost/index.php/url', $navigationItem->getImageTeaser()->getButtonUrl());
-//
-//        $navigationItem = $navigationItem->getSubItems()[0];
-//
-//        $this->assertEquals(16, $navigationItem->getId());
-//        $this->assertFalse($navigationItem->hasImageTeaser());
-//    }
+    public function testItReturnsNavigationWithImageTeaser() {
+        $result = $this->builder->build(2);
+
+        $navigationItem = $result[9];
+
+        $this->assertEquals(15, $navigationItem->getId());
+
+        $imageTeaser = $navigationItem->getImageTeaser();
+
+        $this->assertTrue($navigationItem->hasImageTeaser());
+        $this->assertEquals('http://localhost/pub/media/catalog/category/teaser.png', $imageTeaser->getImageUrl());
+        $this->assertEquals('Image Teaser Headline', $navigationItem->getImageTeaser()->getHeadline());
+        $this->assertEquals('Image Teaser Paragraph', $navigationItem->getImageTeaser()->getParagraph());
+        $this->assertEquals('http://localhost/index.php/url', $navigationItem->getImageTeaser()->getButtonUrl());
+
+        $navigationItem = $navigationItem->getSubItems()[0];
+
+        $this->assertEquals(16, $navigationItem->getId());
+        $this->assertFalse($navigationItem->hasImageTeaser());
+    }
 
     public static function loadCategoriesNotIncludedInMenu() {
         include self::FIXTURE_DIRECTORY.'categories_not_included_in_menu.php';
@@ -154,7 +155,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $cache = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
             ->create(\Magento\Framework\App\CacheInterface::class);
 
-        $cache->remove(\Creativestyle\ContentConstructorFrontendExtension\Helper\Category::CACHE_TAG);
+        $cache->remove(\MageSuite\Category\Model\ResourceModel\Category::CACHE_TAG);
     }
 
     public static function loadCategoriesWithCustomAttributes() {
@@ -164,7 +165,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $cache = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
             ->create(\Magento\Framework\App\CacheInterface::class);
 
-        $cache->remove(\Creativestyle\ContentConstructorFrontendExtension\Helper\Category::CACHE_TAG);
+        $cache->remove(\MageSuite\Category\Model\ResourceModel\Category::CACHE_TAG);
     }
 
     public static function loadCategoriesWithProducts() {
@@ -174,6 +175,6 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $cache = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
             ->create(\Magento\Framework\App\CacheInterface::class);
 
-        $cache->remove(\Creativestyle\ContentConstructorFrontendExtension\Helper\Category::CACHE_TAG);
+        $cache->remove(\MageSuite\Category\Model\ResourceModel\Category::CACHE_TAG);
     }
 }
