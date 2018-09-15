@@ -2,6 +2,9 @@
 
 namespace MageSuite\Navigation\Test\Integration\Service\Navigation;
 
+/**
+ * @magentoAppArea frontend
+ */
 class BuilderTest extends \PHPUnit\Framework\TestCase
 {
     const FIXTURE_DIRECTORY = __DIR__ . '/../../_files/';
@@ -26,6 +29,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
+     * @magentoAppArea frontend
      * @magentoDataFixture Magento/Catalog/_files/categories.php
      * @magentoDataFixture loadCategoriesNotIncludedInMenu
      * @magentoCache all disabled
@@ -62,6 +66,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoAppIsolation enabled
+     * @magentoAppArea frontend
      * @magentoDbIsolation enabled
      * @magentoDataFixture Magento/Catalog/_files/categories.php
      * @magentoDataFixture loadCategoriesNotIncludedInMenu
@@ -79,15 +84,14 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
+     * @magentoAppArea frontend
      * @magentoAdminConfigFixture cc_frontend_extension/configuration/sort_alphabetically 1
      * @magentoDataFixture loadCategoriesWithProducts
      * @magentoCache all disabled
      */
     public function testItReturnsNavigationCorrectSorting()
     {
-        $result = $this->builder->build(3311);
-
-        $sortedCategories = $result[0]->getSubItems();
+        $sortedCategories = $this->builder->build(3331);
 
         $this->assertEquals($sortedCategories[0]->getLabel(), 'Ä Fourth subcategory');
         $this->assertEquals($sortedCategories[1]->getLabel(), 'A Second subcategory');
@@ -99,6 +103,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
+     * @magentoAppArea frontend
      * @magentoDataFixture Magento/Catalog/_files/categories.php
      * @magentoDataFixture loadCategoriesWithCustomAttributes
      * @magentoCache all disabled
@@ -122,6 +127,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
+     * @magentoAppArea frontend
      * @magentoDataFixture Magento/Catalog/_files/categories.php
      * @magentoDataFixture loadCategoriesWithCustomAttributes
      * @magentoCache all disabled

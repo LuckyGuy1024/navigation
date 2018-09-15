@@ -17,20 +17,13 @@ class Builder implements BuilderInterface
      */
     protected $categoryRepository;
 
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
-
     public function __construct(
         \Magento\Catalog\Api\CategoryRepositoryInterface $categoryRepository,
-        \MageSuite\Navigation\Model\Navigation\ItemFactory $itemFactory,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \MageSuite\Navigation\Model\Navigation\ItemFactory $itemFactory
     )
     {
         $this->itemFactory = $itemFactory;
         $this->categoryRepository = $categoryRepository;
-        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -72,17 +65,6 @@ class Builder implements BuilderInterface
             }
 
             $subItems[] = $this->buildNavigationItemsTree($childCategory);
-
-            if($this->scopeConfig->getValue('cc_frontend_extension/configuration/sort_alphabetically')) {
-                usort($subItems, function (\MageSuite\Navigation\Model\Navigation\Item $a,  \MageSuite\Navigation\Model\Navigation\Item $b)
-                {
-                    setlocale(LC_ALL, 'en_GB');
-                    $c = iconv('UTF-8', 'ASCII//TRANSLIT', $a->getLabel());
-                    $d = iconv('UTF-8', 'ASCII//TRANSLIT', $b->getLabel());
-                    return ($c <=> $d);
-                }
-                );
-            }
         }
 
         $navigationItem->setSubItems($subItems);
