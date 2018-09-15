@@ -96,6 +96,11 @@ class Item extends \Magento\Framework\DataObject
         return $this->customUrlGenerator->generate($customUrl);
     }
 
+
+
+    /**
+     * @return int
+     */
     public function getProductCount() {
         return $this->categoryHelper->getProductCount($this->category);
     }
@@ -127,6 +132,13 @@ class Item extends \Magento\Framework\DataObject
      */
     public function hasFeaturedProducts() {
         return !empty($this->getFeaturedProducts()->getProducts());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasSubItems() {
+        return !empty($this->getSubItems());
     }
 
     /**
