@@ -4,6 +4,8 @@ namespace MageSuite\Navigation\Block;
 
 class Navigation extends \Magento\Framework\View\Element\Template
 {
+    const ONE_DAY = 86400;
+
     /**
      * @var \MageSuite\Navigation\Service\Navigation\Builder
      */
@@ -46,5 +48,25 @@ class Navigation extends \Magento\Framework\View\Element\Template
         }
 
         return \MageSuite\Navigation\Service\Navigation\Builder::TYPE_DESKTOP;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCacheKeyInfo()
+    {
+        return [
+            $this->getNameInLayout(),
+            $this->getNavigationType(),
+            $this->storeManager->getStore()->getId()
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCacheLifetime()
+    {
+        return self::ONE_DAY;
     }
 }
