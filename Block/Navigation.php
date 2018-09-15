@@ -27,9 +27,24 @@ class Navigation extends \Magento\Framework\View\Element\Template
         $this->storeManager = $storeManager;
     }
 
+    /**
+     * @return \MageSuite\Navigation\Model\Navigation\Item[]
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getItems() {
         $rootCategoryId = $this->storeManager->getStore()->getRootCategoryId();
 
-        return $this->navigationBuilder->build($rootCategoryId);
+        return $this->navigationBuilder->build($rootCategoryId, $this->getNavigationType());
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNavigationType() {
+        if($this->getType() == \MageSuite\Navigation\Service\Navigation\Builder::TYPE_MOBILE) {
+            return \MageSuite\Navigation\Service\Navigation\Builder::TYPE_MOBILE;
+        }
+
+        return \MageSuite\Navigation\Service\Navigation\Builder::TYPE_DESKTOP;
     }
 }
