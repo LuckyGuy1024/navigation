@@ -8,6 +8,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
      * @var \MageSuite\Navigation\Service\Navigation\Builder
      */
     protected $navigationBuilder;
+
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
@@ -26,7 +27,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
         $this->storeManager = $storeManager;
     }
 
-    public function getNavigationItems() {
+    public function getItems() {
         $rootCategoryId = $this->storeManager->getStore()->getRootCategoryId();
 
         return $this->navigationBuilder->build($rootCategoryId);
