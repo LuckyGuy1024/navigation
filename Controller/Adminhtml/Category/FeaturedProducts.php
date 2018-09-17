@@ -9,5 +9,5 @@ abstract class FeaturedProducts extends \Magento\Backend\App\Action
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Creativestyle_FrontendExtension::item_list';
+    const ADMIN_RESOURCE = 'MageSuite_Navigation::item_list';
 }
