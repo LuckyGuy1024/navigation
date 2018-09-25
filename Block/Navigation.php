@@ -17,7 +17,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
     protected $storeManager;
 
     public function __construct(
-        \Magento\Framework\View\Element\Template $context,
+        \Magento\Framework\View\Element\Template\Context $context,
         \MageSuite\Navigation\Service\Navigation\Builder $navigationBuilder,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $data = []

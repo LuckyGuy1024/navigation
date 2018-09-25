@@ -96,8 +96,6 @@ class Item extends \Magento\Framework\DataObject
         return $this->customUrlGenerator->generate($customUrl);
     }
 
-
-
     /**
      * @return int
      */
@@ -150,5 +148,12 @@ class Item extends \Magento\Framework\DataObject
         }
 
         return !empty($this->getImageTeaser()->getImageUrl());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCustomUrl() {
+        return !empty($this->category->getCategoryCustomUrl());
     }
 }
