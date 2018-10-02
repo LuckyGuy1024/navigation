@@ -2,8 +2,6 @@
 
 namespace MageSuite\Navigation\Block;
 
-use Magento\Customer\Model\Context as CustomerContext;
-
 class Navigation extends \Magento\Framework\View\Element\Template
 {
     const ONE_DAY = 86400;
@@ -68,7 +66,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
             $this->getNameInLayout(),
             $this->getNavigationType(),
             $this->storeManager->getStore()->getId(),
-            $this->httpContext->getValue(CustomerContext::CONTEXT_GROUP)
+            $this->httpContext->getValue(\Magento\Customer\Model\Context::CONTEXT_GROUP)
         ];
     }
 
