@@ -2,6 +2,8 @@
 
 namespace MageSuite\Navigation\Block;
 
+use Magento\Customer\Model\Context as CustomerContext;
+
 class Navigation extends \Magento\Framework\View\Element\Template
 {
     const ONE_DAY = 86400;
@@ -12,12 +14,18 @@ class Navigation extends \Magento\Framework\View\Element\Template
     protected $navigationBuilder;
 
     /**
+     * @var \Magento\Framework\App\Http\Context
+     */
+    protected $httpContext;
+
+    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Framework\App\Http\Context $httpContext,
         \MageSuite\Navigation\Service\Navigation\Builder $navigationBuilder,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $data = []
@@ -25,6 +33,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
     {
         parent::__construct($context, $data);
 
+        $this->httpContext = $httpContext;
         $this->navigationBuilder = $navigationBuilder;
         $this->storeManager = $storeManager;
     }
@@ -58,7 +67,8 @@ class Navigation extends \Magento\Framework\View\Element\Template
         return [
             $this->getNameInLayout(),
             $this->getNavigationType(),
-            $this->storeManager->getStore()->getId()
+            $this->storeManager->getStore()->getId(),
+            $this->httpContext->getValue(CustomerContext::CONTEXT_GROUP)
         ];
     }
 
