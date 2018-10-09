@@ -24,17 +24,23 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
      */
     private $eavConfig;
 
+    /**
+     * @var \MageSuite\Navigation\Migration\AddIncludeInMobileDefaultValue
+     */
+    protected $addIncludeInMobileDefaultValue;
+
     public function __construct(
         \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory,
         \Magento\Framework\Setup\ModuleDataSetupInterface $moduleDataSetupInterface,
-        \Magento\Eav\Model\Config $eavConfig
-
+        \Magento\Eav\Model\Config $eavConfig,
+        \MageSuite\Navigation\Migration\AddIncludeInMobileDefaultValue $addIncludeInMobileDefaultValue
     )
     {
         $this->eavSetupFactory = $eavSetupFactory;
         $this->moduleDataSetupInterface = $moduleDataSetupInterface;
         $this->eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetupInterface]);
         $this->eavConfig = $eavConfig;
+        $this->addIncludeInMobileDefaultValue = $addIncludeInMobileDefaultValue;
     }
 
     public function upgrade(
@@ -45,6 +51,10 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '1.0.1', '<')) {
             $this->addIncludeInMobileNavigationAttribute();
+        }
+
+        if (version_compare($context->getVersion(), '1.0.2', '<')) {
+            $this->addDefaultValueToIncludeInMobileNavAttribute();
         }
 
         $setup->endSetup();
@@ -68,5 +78,17 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
                 ]
             );
         }
+    }
+
+    protected function addDefaultValueToIncludeInMobileNavAttribute()
+    {
+        $includeInMobileAttributeId = $this->eavSetup->getAttributeId(\Magento\Catalog\Model\Category::ENTITY, 'include_in_mobile_navigation');
+        $includeInDesktopAttributeId = $this->eavSetup->getAttributeId(\Magento\Catalog\Model\Category::ENTITY, 'include_in_menu');
+
+        if(!$includeInMobileAttributeId or !$includeInDesktopAttributeId){
+            return false;
+        }
+
+        $this->addIncludeInMobileDefaultValue->execute($includeInMobileAttributeId, $includeInDesktopAttributeId);
     }
 }
