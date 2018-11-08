@@ -49,7 +49,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
     /**
      * @return string
      */
-    protected function getNavigationType() {
+    public function getNavigationType() {
         if($this->getType() == \MageSuite\Navigation\Service\Navigation\Builder::TYPE_MOBILE) {
             return \MageSuite\Navigation\Service\Navigation\Builder::TYPE_MOBILE;
         }
