@@ -81,23 +81,7 @@ class Builder implements BuilderInterface
         $categories = $category->getChildrenCategories();
 
         $categories->clear();
-        $categories->addAttributeToSelect([
-            'parent_id',
-            'include_in_menu',
-            'include_in_mobile_navigation',
-            'do_not_expand_flyout',
-            'category_custom_url',
-            'category_identifier',
-            'featured_products_header',
-            'featured_products',
-            'category_icon',
-            'image_teaser_headline',
-            'image_teaser_subheadline',
-            'image_teaser_paragraph',
-            'image_teaser_button_label',
-            'image_teaser_button_link',
-            'image_teaser'
-        ]);
+        $categories->addAttributeToSelect('*');
         $categories->load();
 
         return $categories;

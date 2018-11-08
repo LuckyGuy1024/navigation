@@ -65,13 +65,41 @@ class Item extends \Magento\Framework\DataObject
     }
 
     /**
+     * @param $label string
+     */
+    public function setLabel($label) {
+        $this->setData('label', $label);
+    }
+
+    /**
      * @return string
      */
-    public function getLabel() {
+    public function getLabel()
+    {
+        if($this->hasData('label')){
+            return $this->getData('label');
+        }
+
         return $this->category->getName();
     }
 
-    public function getIdentifier() {
+    /**
+     * @param $identifier string
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->setData('identifier', $identifier);
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        if($this->hasData('identifier')){
+            return $this->getData('identifier');
+        }
+
         return $this->category->getCategoryIdentifier();
     }
 
