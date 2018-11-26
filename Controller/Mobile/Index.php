@@ -1,6 +1,6 @@
 <?php
 
-namespace MageSuite\Navigation\Controller\Index;
+namespace MageSuite\Navigation\Controller\Mobile;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
