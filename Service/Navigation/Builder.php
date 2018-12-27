@@ -17,6 +17,11 @@ class Builder implements BuilderInterface
      */
     protected $categoryRepository;
 
+    /**
+     * @var string[]
+     */
+    private $identities;
+
     public function __construct(
         \Magento\Catalog\Api\CategoryRepositoryInterface $categoryRepository,
         \MageSuite\Navigation\Model\Navigation\ItemFactory $itemFactory
@@ -24,6 +29,7 @@ class Builder implements BuilderInterface
     {
         $this->itemFactory = $itemFactory;
         $this->categoryRepository = $categoryRepository;
+        $this->identities = [];
     }
 
     /**
@@ -32,7 +38,6 @@ class Builder implements BuilderInterface
     public function build($rootCategoryId, $navigationType = self::TYPE_DESKTOP)
     {
         $navigationItems = [];
-
         $rootCategory = $this->categoryRepository->get($rootCategoryId);
         $childCategories = $this->getChildrenCategories($rootCategory);
 
@@ -50,6 +55,7 @@ class Builder implements BuilderInterface
 
     protected function buildNavigationItemsTree(\Magento\Catalog\Model\Category $category, $navigationType = self::TYPE_DESKTOP) {
         $navigationItem = $this->itemFactory->create(['category' => $category]);
+        $this->addIdentities($category->getIdentities());
 
         if(!$category->hasChildren()) {
             $navigationItem->setSubItems([]);
@@ -65,6 +71,7 @@ class Builder implements BuilderInterface
             }
 
             $subItems[] = $this->buildNavigationItemsTree($childCategory);
+            $this->addIdentities($childCategory->getIdentities());
         }
 
         $navigationItem->setSubItems($subItems);
@@ -79,7 +86,6 @@ class Builder implements BuilderInterface
      */
     protected function getChildrenCategories($category) {
         $categories = $category->getChildrenCategories();
-
         $categories->clear();
         $categories->addAttributeToSelect('*');
         $categories->load();
@@ -93,5 +99,22 @@ class Builder implements BuilderInterface
         }
 
         return $category->getIncludeInMenu();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIdentities(){
+        return $this->identities;
+    }
+
+    private function addIdentities(array $identities) {
+        foreach($identities as $identity) {
+            if(in_array($identity, $this->identities)){
+                continue;
+            }
+
+            $this->identities[] = $identity;
+        }
     }
 }

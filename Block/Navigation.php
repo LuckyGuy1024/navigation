@@ -2,7 +2,7 @@
 
 namespace MageSuite\Navigation\Block;
 
-class Navigation extends \Magento\Framework\View\Element\Template
+class Navigation extends \Magento\Framework\View\Element\Template implements \Magento\Framework\DataObject\IdentityInterface
 {
     const ONE_DAY = 86400;
 
@@ -35,7 +35,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
         $this->navigationBuilder = $navigationBuilder;
         $this->storeManager = $storeManager;
     }
-
+    
     /**
      * @return \MageSuite\Navigation\Model\Navigation\Item[]
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -76,5 +76,13 @@ class Navigation extends \Magento\Framework\View\Element\Template
     public function getCacheLifetime()
     {
         return self::ONE_DAY;
+    }
+
+    /**
+     * @return string[]
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getIdentities(){
+        return $this->navigationBuilder->getIdentities();
     }
 }
