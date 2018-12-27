@@ -36,32 +36,32 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      */
     public function testItReturnsNavigationCorrectStructure() {
         $navigation = $this->builder->build(self::ROOT_CATEGORY_ID);
-
         $this->assertCount(7, $navigation);
-
         $this->assertCount(1, $navigation[0]->getSubItems());
-
         $this->assertEquals('Category 1', $navigation[0]->getLabel());
         $this->assertEquals('Category 2', $navigation[1]->getLabel());
         $this->assertEquals('Category 1.1', $navigation[0]->getSubItems()[0]->getLabel());
         $this->assertEquals('Category 1.1.1', $navigation[0]->getSubItems()[0]->getSubItems()[0]->getLabel());
-
         $this->assertEquals(2, $navigation[0]->getParentId());
-
         $this->assertEquals(2, $navigation[0]->getProductCount());
         $this->assertEquals(0, $navigation[1]->getProductCount());
-
         $this->assertEquals('http://localhost/index.php/category-1.html', $navigation[0]->getUrl());
+        $this->assertEquals('http://localhost/index.php/category-1/category-1-1.html', $navigation[0]->getSubItems()[0]->getUrl());
+        $this->assertEquals('http://localhost/index.php/category-1/category-1-1/category-1-1-1.html', $navigation[0]->getSubItems()[0]->getSubItems()[0]->getUrl());
+    }
 
-        $this->assertEquals(
-            'http://localhost/index.php/category-1/category-1-1.html',
-            $navigation[0]->getSubItems()[0]->getUrl()
-        );
-
-        $this->assertEquals(
-            'http://localhost/index.php/category-1/category-1-1/category-1-1-1.html',
-            $navigation[0]->getSubItems()[0]->getSubItems()[0]->getUrl()
-        );
+    /**
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation enabled
+     * @magentoAppArea frontend
+     * @magentoDataFixture Magento/Catalog/_files/categories.php
+     * @magentoDataFixture loadCategoriesNotIncludedInMenu
+     * @magentoCache all disabled
+     */
+    public function testItReturnsNavigationCorrectIdentities() {
+        $this->assertEquals([], $this->builder->getIdentities());
+        $navigation = $this->builder->build(self::ROOT_CATEGORY_ID);
+        $this->assertEquals(['cat_c_3', 'cat_c_4', 'cat_c_5', 'cat_c_6', 'cat_c_7', 'cat_c_9', 'cat_c_10', 'cat_c_11', 'cat_c_12'], $this->builder->getIdentities());
     }
 
     /**
@@ -92,7 +92,6 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsNavigationCorrectSorting()
     {
         $sortedCategories = $this->builder->build(3331);
-
         $this->assertEquals($sortedCategories[0]->getLabel(), 'Ä Fourth subcategory');
         $this->assertEquals($sortedCategories[1]->getLabel(), 'A Second subcategory');
         $this->assertEquals($sortedCategories[2]->getLabel(), 'B Third subcategory');
@@ -110,9 +109,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      */
     public function testItReturnsCategoriesWithCorrectAttributes() {
         $result = $this->builder->build(self::ROOT_CATEGORY_ID);
-
         $this->assertCount(10, $result);
-
         $this->assertEquals('http://localhost/index.php/testurl.html', $result[8]->getUrl());
         $this->assertEquals('http://localhost/index.php/testurl.html', $result[9]->getUrl());
         $this->assertEquals('cat14', $result[8]->getIdentifier());
@@ -134,13 +131,10 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      */
     public function testItReturnsNavigationWithImageTeaser() {
         $result = $this->builder->build(2);
-
         $navigationItem = $result[9];
-
         $this->assertEquals(15, $navigationItem->getId());
 
         $imageTeaser = $navigationItem->getImageTeaser();
-
         $this->assertTrue($navigationItem->hasImageTeaser());
         $this->assertEquals('http://localhost/pub/media/catalog/category/teaser.png', $imageTeaser->getImageUrl());
         $this->assertEquals('Image Teaser Headline', $navigationItem->getImageTeaser()->getHeadline());
@@ -148,7 +142,6 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('http://localhost/index.php/url', $navigationItem->getImageTeaser()->getButtonUrl());
 
         $navigationItem = $navigationItem->getSubItems()[0];
-
         $this->assertEquals(16, $navigationItem->getId());
         $this->assertFalse($navigationItem->hasImageTeaser());
     }
