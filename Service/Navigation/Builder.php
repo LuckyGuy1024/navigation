@@ -57,7 +57,7 @@ class Builder implements BuilderInterface
             $navigationItems[] = $this->buildNavigationItemsTree($category, $navigationType);
         }
 
-        $this->cache->save(self::class . '\\' . $rootCategoryId . '\\' . $navigationType, $this->getIdentities());
+        $this->cache->save(self::class . '\\' . $rootCategoryId . '\\' . $navigationType, $this->identities);
 
         return $navigationItems;
     }
@@ -117,7 +117,7 @@ class Builder implements BuilderInterface
      */
     public function getIdentities($rootCategoryId, $navigationType = self::TYPE_DESKTOP)
     {
-        return $this->cache->load(self::class . '\\' . $rootCategoryId . '\\' . $navigationType) ?: [];
+        return $this->cache->load(self::class . '\\' . $rootCategoryId . '\\' . $navigationType) ?: $this->identities;
     }
 
     private function addIdentities(array $identities)
