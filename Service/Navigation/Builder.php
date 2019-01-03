@@ -18,18 +18,25 @@ class Builder implements BuilderInterface
     protected $categoryRepository;
 
     /**
+     * @var \Magento\Framework\App\CacheInterface
+     */
+    protected $cache;
+
+    /**
      * @var string[]
      */
     private $identities;
 
     public function __construct(
         \Magento\Catalog\Api\CategoryRepositoryInterface $categoryRepository,
-        \MageSuite\Navigation\Model\Navigation\ItemFactory $itemFactory
+        \MageSuite\Navigation\Model\Navigation\ItemFactory $itemFactory,
+        \Magento\Framework\App\CacheInterface $cache
     )
     {
         $this->itemFactory = $itemFactory;
         $this->categoryRepository = $categoryRepository;
         $this->identities = [];
+        $this->cache = $cache;
     }
 
     /**
@@ -42,31 +49,33 @@ class Builder implements BuilderInterface
         $childCategories = $this->getChildrenCategories($rootCategory);
 
         /** @var \Magento\Catalog\Model\Category $category */
-        foreach($childCategories as $category) {
-            if(!$this->isVisible($category, $navigationType)) {
+        foreach ($childCategories as $category) {
+            if (!$this->isVisible($category, $navigationType)) {
                 continue;
             }
 
             $navigationItems[] = $this->buildNavigationItemsTree($category, $navigationType);
         }
 
+        $this->cache->save(self::class . '\\' . $rootCategoryId . '\\' . $navigationType, $this->getIdentities());
+
         return $navigationItems;
     }
 
-    protected function buildNavigationItemsTree(\Magento\Catalog\Model\Category $category, $navigationType = self::TYPE_DESKTOP) {
+    protected function buildNavigationItemsTree(\Magento\Catalog\Model\Category $category, $navigationType = self::TYPE_DESKTOP)
+    {
         $navigationItem = $this->itemFactory->create(['category' => $category]);
+        $subItems = [];
         $this->addIdentities($category->getIdentities());
 
-        if(!$category->hasChildren()) {
+        if (!$category->hasChildren()) {
             $navigationItem->setSubItems([]);
 
             return $navigationItem;
         }
 
-        $subItems = [];
-
-        foreach($this->getChildrenCategories($category) as $childCategory) {
-            if(!$this->isVisible($childCategory, $navigationType)) {
+        foreach ($this->getChildrenCategories($category) as $childCategory) {
+            if (!$this->isVisible($childCategory, $navigationType)) {
                 continue;
             }
 
@@ -84,7 +93,8 @@ class Builder implements BuilderInterface
      * @param \Magento\Catalog\Model\Category $category
      * @return mixed
      */
-    protected function getChildrenCategories($category) {
+    protected function getChildrenCategories($category)
+    {
         $categories = $category->getChildrenCategories();
         $categories->clear();
         $categories->addAttributeToSelect('*');
@@ -93,8 +103,9 @@ class Builder implements BuilderInterface
         return $categories;
     }
 
-    protected function isVisible($category, $navigationType = self::TYPE_DESKTOP) {
-        if($navigationType == self::TYPE_MOBILE) {
+    protected function isVisible($category, $navigationType = self::TYPE_DESKTOP)
+    {
+        if ($navigationType == self::TYPE_MOBILE) {
             return $category->getIncludeInMobileNavigation();
         }
 
@@ -104,13 +115,15 @@ class Builder implements BuilderInterface
     /**
      * @return string[]
      */
-    public function getIdentities(){
-        return $this->identities;
+    public function getIdentities($rootCategoryId, $navigationType = self::TYPE_DESKTOP)
+    {
+        return $this->cache->load(self::class . '\\' . $rootCategoryId . '\\' . $navigationType) ?: [];
     }
 
-    private function addIdentities(array $identities) {
-        foreach($identities as $identity) {
-            if(in_array($identity, $this->identities)){
+    private function addIdentities(array $identities)
+    {
+        foreach ($identities as $identity) {
+            if (in_array($identity, $this->identities)) {
                 continue;
             }
 

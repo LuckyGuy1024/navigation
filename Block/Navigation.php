@@ -83,6 +83,8 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getIdentities(){
-        return $this->navigationBuilder->getIdentities();
+        $rootCategoryId = $this->storeManager->getStore()->getRootCategoryId();
+        
+        return $this->navigationBuilder->getIdentities($rootCategoryId, $this->getNavigationType());
     }
 }
