@@ -57,7 +57,7 @@ class Builder implements BuilderInterface
             $navigationItems[] = $this->buildNavigationItemsTree($category, $navigationType);
         }
 
-        $this->cache->save(self::class . '\\' . $rootCategoryId . '\\' . $navigationType, $this->identities);
+        $this->cache->save($this->identities, self::class . '\\' . $rootCategoryId . '\\' . $navigationType);
 
         return $navigationItems;
     }

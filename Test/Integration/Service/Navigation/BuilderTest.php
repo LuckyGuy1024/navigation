@@ -59,7 +59,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      * @magentoCache all disabled
      */
     public function testItReturnsNavigationCorrectIdentities() {
-        $this->assertEquals([], $this->builder->getIdentities());
+        $this->assertEquals([], $this->builder->getIdentities(self::ROOT_CATEGORY_ID));
         $navigation = $this->builder->build(self::ROOT_CATEGORY_ID);
         $this->assertEquals(['cat_c_3', 'cat_c_4', 'cat_c_5', 'cat_c_6', 'cat_c_7', 'cat_c_9', 'cat_c_10', 'cat_c_11', 'cat_c_12'], $this->builder->getIdentities());
     }
