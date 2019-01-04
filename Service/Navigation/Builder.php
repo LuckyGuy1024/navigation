@@ -17,26 +17,13 @@ class Builder implements BuilderInterface
      */
     protected $categoryRepository;
 
-    /**
-     * @var \Magento\Framework\App\CacheInterface
-     */
-    protected $cache;
-
-    /**
-     * @var string[]
-     */
-    private $identities;
-
     public function __construct(
         \Magento\Catalog\Api\CategoryRepositoryInterface $categoryRepository,
-        \MageSuite\Navigation\Model\Navigation\ItemFactory $itemFactory,
-        \Magento\Framework\App\CacheInterface $cache
+        \MageSuite\Navigation\Model\Navigation\ItemFactory $itemFactory
     )
     {
         $this->itemFactory = $itemFactory;
         $this->categoryRepository = $categoryRepository;
-        $this->identities = [];
-        $this->cache = $cache;
     }
 
     /**
@@ -57,8 +44,6 @@ class Builder implements BuilderInterface
             $navigationItems[] = $this->buildNavigationItemsTree($category, $navigationType);
         }
 
-        $this->cache->save($this->identities, self::class . '\\' . $rootCategoryId . '\\' . $navigationType);
-
         return $navigationItems;
     }
 
@@ -66,7 +51,6 @@ class Builder implements BuilderInterface
     {
         $navigationItem = $this->itemFactory->create(['category' => $category]);
         $subItems = [];
-        $this->addIdentities($category->getIdentities());
 
         if (!$category->hasChildren()) {
             $navigationItem->setSubItems([]);
@@ -80,7 +64,6 @@ class Builder implements BuilderInterface
             }
 
             $subItems[] = $this->buildNavigationItemsTree($childCategory);
-            $this->addIdentities($childCategory->getIdentities());
         }
 
         $navigationItem->setSubItems($subItems);
@@ -110,24 +93,5 @@ class Builder implements BuilderInterface
         }
 
         return $category->getIncludeInMenu();
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getIdentities($rootCategoryId, $navigationType = self::TYPE_DESKTOP)
-    {
-        return $this->cache->load(self::class . '\\' . $rootCategoryId . '\\' . $navigationType) ?: $this->identities;
-    }
-
-    private function addIdentities(array $identities)
-    {
-        foreach ($identities as $identity) {
-            if (in_array($identity, $this->identities)) {
-                continue;
-            }
-
-            $this->identities[] = $identity;
-        }
     }
 }

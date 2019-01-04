@@ -52,25 +52,10 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoAppIsolation enabled
-     * @magentoDbIsolation enabled
-     * @magentoAppArea frontend
-     * @magentoDataFixture Magento/Catalog/_files/categories.php
-     * @magentoDataFixture loadCategoriesNotIncludedInMenu
-     * @magentoCache all disabled
-     */
-    public function testItReturnsNavigationCorrectIdentities() {
-        $this->assertEquals([], $this->builder->getIdentities(self::ROOT_CATEGORY_ID));
-        $navigation = $this->builder->build(self::ROOT_CATEGORY_ID);
-        $this->assertEquals(['cat_c_3', 'cat_c_4', 'cat_c_5', 'cat_c_6', 'cat_c_7', 'cat_c_9', 'cat_c_10', 'cat_c_11', 'cat_c_12'], $this->builder->getIdentities());
-    }
-
-    /**
-     * @magentoAppIsolation enabled
      * @magentoAppArea frontend
      * @magentoDbIsolation enabled
      * @magentoDataFixture Magento/Catalog/_files/categories.php
      * @magentoDataFixture loadCategoriesNotIncludedInMenu
-     * @magentoCache all disabled
      */
     public function testItReturnsOnlyItemsForMobileNavigation() {
         $navigation = $this->builder->build(
@@ -87,7 +72,6 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      * @magentoAppArea frontend
      * @magentoAdminConfigFixture cc_frontend_extension/configuration/sort_alphabetically 1
      * @magentoDataFixture loadCategoriesWithProducts
-     * @magentoCache all disabled
      */
     public function testItReturnsNavigationCorrectSorting()
     {
@@ -105,7 +89,6 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      * @magentoAppArea frontend
      * @magentoDataFixture Magento/Catalog/_files/categories.php
      * @magentoDataFixture loadCategoriesWithCustomAttributes
-     * @magentoCache all disabled
      */
     public function testItReturnsCategoriesWithCorrectAttributes() {
         $result = $this->builder->build(self::ROOT_CATEGORY_ID);
@@ -127,7 +110,6 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
      * @magentoAppArea frontend
      * @magentoDataFixture Magento/Catalog/_files/categories.php
      * @magentoDataFixture loadCategoriesWithCustomAttributes
-     * @magentoCache all disabled
      */
     public function testItReturnsNavigationWithImageTeaser() {
         $result = $this->builder->build(2);

@@ -184,4 +184,8 @@ class Item extends \Magento\Framework\DataObject
     public function hasCustomUrl() {
         return !empty($this->category->getCategoryCustomUrl());
     }
+
+    public function getIdentities() {
+        return $this->category->getIdentities();
+    }
 }
