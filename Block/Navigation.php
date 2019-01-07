@@ -20,12 +20,17 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    protected $serializer;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\App\Http\Context $httpContext,
         \MageSuite\Navigation\Service\Navigation\Builder $navigationBuilder,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Serialize\SerializerInterface $serializer,
         array $data = []
     )
     {
@@ -34,6 +39,7 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
         $this->httpContext = $httpContext;
         $this->navigationBuilder = $navigationBuilder;
         $this->storeManager = $storeManager;
+        $this->serializer = $serializer;
     }
     
     /**
@@ -43,7 +49,13 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
     public function getItems() {
         $rootCategoryId = $this->storeManager->getStore()->getRootCategoryId();
 
-        return $this->navigationBuilder->build($rootCategoryId, $this->getNavigationType());
+        $buildedNavigation = $this->navigationBuilder->build($rootCategoryId, $this->getNavigationType());
+
+        $cacheTags = $this->getNavigationTags($buildedNavigation);
+
+        $this->_cache->save($this->serializer->serialize($cacheTags), 'navigation_'.$rootCategoryId.'_'.$this->getNavigationType(), $cacheTags);
+
+        return $buildedNavigation;
     }
 
     /**
@@ -83,6 +95,36 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getIdentities(){
-        return [\Magento\Catalog\Model\Category::CACHE_TAG];
+        $rootCategoryId = $this->storeManager->getStore()->getRootCategoryId();
+
+        $cachedTags = $this->_cache->load('navigation_'.$rootCategoryId.'_'.$this->getNavigationType());
+
+        if($cachedTags) {
+            return $this->serializer->unserialize($cachedTags);
+        }
+
+        $navigationItems = $this->getItems();
+
+        return $this->getNavigationTags($navigationItems);
+    }
+
+    /**
+     * @param \MageSuite\Navigation\Model\Navigation\Item[] $navigationItems
+     */
+    protected function getNavigationTags(array $navigationItems, $aggregatedTags = [\Magento\Catalog\Model\Category::CACHE_TAG])
+    {
+        if(empty($navigationItems)) {
+            return $aggregatedTags;
+        }
+
+        foreach($navigationItems as $navigationItem) {
+            if($navigationItem->hasSubItems()) {
+                $aggregatedTags = array_merge($aggregatedTags, $this->getNavigationTags($navigationItem->getSubItems(), $aggregatedTags));
+            }
+
+            $aggregatedTags = array_merge($aggregatedTags, $navigationItem->getIdentities());
+        }
+
+        return array_unique($aggregatedTags);
     }
 }
