@@ -52,9 +52,7 @@
                     <item name="formElement" xsi:type="string">input</item>
                     <item name="label" xsi:type="string" translate="true">Custom target URL</item>
                     <item name="notice" xsi:type="string" translate="true">
-                        The category will be redirected to this URL. If you do not want to redirect this page, leave this field blank.
-                        Use absolute URL (starts with http://) to redirect outside shop domain.
-                        Use relative URL i.e. customer/account/login/ to redirect inside shop domain.
+                        Links to this category will be replaced with above URL when provided. Use absolute URL (starts with https://) to redirect outside the shop. Use relative URL (i.e. customer/account/login/) to redirect within the shop.
                     </item>
                     <item name="additionalClasses" xsi:type="string">cs-csfeature__logo</item>
                 </item>
