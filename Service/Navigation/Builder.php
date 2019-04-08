@@ -63,7 +63,7 @@ class Builder implements BuilderInterface
                 continue;
             }
 
-            $subItems[] = $this->buildNavigationItemsTree($childCategory);
+            $subItems[] = $this->buildNavigationItemsTree($childCategory, $navigationType);
         }
 
         $navigationItem->setSubItems($subItems);
