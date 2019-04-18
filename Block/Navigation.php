@@ -24,6 +24,10 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
      * @var \Magento\Framework\Serialize\SerializerInterface
      */
     protected $serializer;
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $session;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -31,6 +35,7 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
         \MageSuite\Navigation\Service\Navigation\Builder $navigationBuilder,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Serialize\SerializerInterface $serializer,
+        \Magento\Customer\Model\Session $session,
         array $data = []
     )
     {
@@ -40,6 +45,7 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
         $this->navigationBuilder = $navigationBuilder;
         $this->storeManager = $storeManager;
         $this->serializer = $serializer;
+        $this->session = $session;
     }
     
     /**
@@ -74,11 +80,13 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
      */
     public function getCacheKeyInfo()
     {
+        $store = $this->storeManager->getStore();
         return [
             $this->getNameInLayout(),
             $this->getNavigationType(),
-            $this->storeManager->getStore()->getId(),
-            $this->httpContext->getValue(\Magento\Customer\Model\Context::CONTEXT_GROUP)
+            $store->getId(),
+            $store->getCurrentCurrency()->getCode(),
+            $this->session->isLoggedIn()
         ];
     }
 
