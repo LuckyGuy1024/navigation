@@ -86,7 +86,7 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
             $this->getNavigationType(),
             $store->getId(),
             $store->getCurrentCurrency()->getCode(),
-            $this->session->isLoggedIn()
+            $this->httpContext->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH)
         ];
     }
 
