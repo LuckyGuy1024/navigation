@@ -55,6 +55,7 @@ class CategoryMapper
             ],
             'decodedImage' => $this->getDecodedImage(),
             'image' => [
+                'raw' => $this->getImageUrl(),
                 'decoded' => $this->getDecodedImage(),
                 'headline' => $this->getHeadline(),
                 'subheadline' => $this->getSubHeadline()
