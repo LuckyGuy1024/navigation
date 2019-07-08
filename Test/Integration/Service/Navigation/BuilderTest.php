@@ -118,10 +118,14 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
 
         $imageTeaser = $navigationItem->getImageTeaser();
         $this->assertTrue($navigationItem->hasImageTeaser());
-        $this->assertEquals('http://localhost/pub/media/catalog/category/teaser.png', $imageTeaser->getImageUrl());
-        $this->assertEquals('Image Teaser Headline', $navigationItem->getImageTeaser()->getHeadline());
-        $this->assertEquals('Image Teaser Paragraph', $navigationItem->getImageTeaser()->getParagraph());
-        $this->assertEquals('http://localhost/index.php/url', $navigationItem->getImageTeaser()->getButtonUrl());
+        $this->assertCount(1, $navigationItem->getImageTeaser()->getSlides());
+
+        $slide = $navigationItem->getImageTeaser()->getSlides()[0];
+
+        $this->assertEquals('{{media url="http://localhost/pub/media/catalog/category/teaser.png"}}', $slide->getImage()['decoded']);
+        $this->assertEquals('Image Teaser Headline', $slide->getImage()['headline']);
+        $this->assertEquals('Image Teaser Paragraph', $slide->getDescription());
+        $this->assertEquals('http://localhost/index.php/url', $slide->getCta()['href']);
 
         $navigationItem = $navigationItem->getSubItems()[0];
         $this->assertEquals(16, $navigationItem->getId());
