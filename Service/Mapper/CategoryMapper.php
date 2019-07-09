@@ -108,13 +108,22 @@ class CategoryMapper
 
     public function getDescription()
     {
-        $description = $this->getSubHeadline();
+        $subHeadline = $this->getSubHeadline();
+        $paragraph = $this->getParagraph();
 
-        if($description){
-            return $description;
+        if($subHeadline && $paragraph){
+            return sprintf('%s %s', $subHeadline, $paragraph);
         }
 
-        return $this->getParagraph();
+        if($subHeadline){
+            return $subHeadline;
+        }
+
+        if($paragraph){
+            return $paragraph;
+        }
+
+        return null;
     }
 
     /**
