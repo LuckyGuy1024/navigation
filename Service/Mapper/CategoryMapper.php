@@ -56,11 +56,11 @@ class CategoryMapper
             'decodedImage' => $this->getDecodedImage(),
             'image' => [
                 'raw' => $this->getImageUrl(),
-                'decoded' => $this->getDecodedImage(),
-                'headline' => $this->getHeadline(),
-                'subheadline' => $this->getSubHeadline()
+                'decoded' => $this->getDecodedImage()
             ],
-            'description' => $this->getParagraph(),
+            'headline' => $this->getHeadline(),
+            'subheadline' => $this->getSubHeadline(),
+            'description' => $this->getDescription(),
             'slogan' => $this->getHeadline()
         ];
 
@@ -72,10 +72,6 @@ class CategoryMapper
         return sprintf('{{media url="%s"}}', $this->getRawImageUrl());
     }
 
-    /**
-     * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
     public function getImageUrl()
     {
         $rawImageUrl = $this->getRawImageUrl();
@@ -108,6 +104,17 @@ class CategoryMapper
         }
 
         return $this->rawImageUrl;
+    }
+
+    public function getDescription()
+    {
+        $description = $this->getSubHeadline();
+
+        if($description){
+            return $description;
+        }
+
+        return $this->getParagraph();
     }
 
     /**
