@@ -122,7 +122,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
 
         $slide = $navigationItem->getImageTeaser()->getSlides()[0];
 
-        $this->assertEquals('{{media url="http://localhost/pub/media/catalog/category/teaser.png"}}', $slide->getImage()['decoded']);
+        $this->assertEquals('{{media url="catalog/category/teaser.png"}}', $slide->getImage()['decoded']);
         $this->assertEquals('Image Teaser Headline', $slide->getImage()['headline']);
         $this->assertEquals('Image Teaser Paragraph', $slide->getDescription());
         $this->assertEquals('http://localhost/index.php/url', $slide->getCta()['href']);

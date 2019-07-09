@@ -25,7 +25,7 @@ class CategoryMapper
 
     protected $category = null;
 
-    protected $imageUrl = null;
+    protected $rawImageUrl = null;
 
     public function __construct(
         \MageSuite\ContentConstructorFrontend\Service\MediaResolver $mediaResolver,
@@ -69,7 +69,7 @@ class CategoryMapper
 
     protected function getDecodedImage()
     {
-        return sprintf('{{media url="%s"}}', $this->getImageUrl());
+        return sprintf('{{media url="%s"}}', $this->getRawImageUrl());
     }
 
     /**
@@ -78,27 +78,36 @@ class CategoryMapper
      */
     public function getImageUrl()
     {
-        if (!$this->imageUrl) {
-            $this->imageUrl = '';
+        $rawImageUrl = $this->getRawImageUrl();
 
-            $image = $this->category->getImageTeaser();
-
-            if ($image) {
-                $mediaBaseUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
-
-                if (is_string($image)) {
-                    $this->imageUrl = $mediaBaseUrl . 'catalog/category/' . $image;
-                } elseif (is_array($image) && isset($image[0]) && isset($image[0]['name'])) {
-                    $this->imageUrl = $mediaBaseUrl . 'catalog/category/' . $image[0]['name'];
-                } else {
-                    throw new \Magento\Framework\Exception\LocalizedException(
-                        __('Something went wrong while getting the image url.')
-                    );
-                }
-            }
+        if(empty($rawImageUrl)){
+            return null;
         }
 
-        return $this->imageUrl;
+        $mediaBaseUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+        return $mediaBaseUrl . $rawImageUrl;
+    }
+
+    public function getRawImageUrl()
+    {
+        if(!empty($this->rawImageUrl)){
+            $this->rawImageUrl;
+        }
+
+        $image = $this->category->getImageTeaser();
+
+        if (is_string($image)) {
+            $this->rawImageUrl = 'catalog/category/' . $image;
+        } elseif (is_array($image) && isset($image[0]) && isset($image[0]['name'])) {
+            $this->rawImageUrl = 'catalog/category/' . $image[0]['name'];
+        } else {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Something went wrong while getting the image url.')
+            );
+        }
+
+        return $this->rawImageUrl;
     }
 
     /**
