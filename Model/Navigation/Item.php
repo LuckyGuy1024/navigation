@@ -175,7 +175,7 @@ class Item extends \Magento\Framework\DataObject
             return false;
         }
 
-        return !empty($this->getImageTeaser()->getImageUrl());
+        return !empty($this->getImageTeaser()->getSlides());
     }
 
     /**
