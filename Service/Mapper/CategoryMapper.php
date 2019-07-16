@@ -50,18 +50,16 @@ class CategoryMapper
 
         $slide = [
             'cta' => [
-                'href' => $this->getButtonUrl(),
-                'label' => $this->getButtonLabel()
+                'href' => $this->getCtaLink(),
+                'label' => $this->getCtaLabel()
             ],
             'decodedImage' => $this->getDecodedImage(),
             'image' => [
                 'raw' => $this->getImageUrl(),
                 'decoded' => $this->getDecodedImage()
             ],
-            'headline' => $this->getHeadline(),
-            'subheadline' => $this->getSubHeadline(),
             'description' => $this->getDescription(),
-            'slogan' => $this->getHeadline()
+            'slogan' => $this->getSlogan()
         ];
 
         return [$slide];
@@ -106,65 +104,36 @@ class CategoryMapper
         return $this->rawImageUrl;
     }
 
+    /**
+     * @return string
+     */
+    public function getSlogan()
+    {
+        return $this->category->getImageTeaserSlogan() ?? '';
+    }
+
+    /**
+     * @return string
+     */
     public function getDescription()
     {
-        $subHeadline = $this->getSubHeadline();
-        $paragraph = $this->getParagraph();
-
-        if($subHeadline && $paragraph){
-            return sprintf('%s %s', $subHeadline, $paragraph);
-        }
-
-        if($subHeadline){
-            return $subHeadline;
-        }
-
-        if($paragraph){
-            return $paragraph;
-        }
-
-        return null;
+        return $this->category->getImageTeaserDescription() ?? '';
     }
 
     /**
      * @return string
      */
-    public function getHeadline()
+    public function getCtaLabel()
     {
-        return $this->category->getImageTeaserHeadline() ?? '';
+        return $this->category->getImageTeaserCtaLabel() ?? '';
     }
 
     /**
      * @return string
      */
-    public function getSubHeadline()
+    public function getCtaLink()
     {
-        return $this->category->getImageTeaserSubheadline() ?? '';
-
-    }
-
-    /**
-     * @return string
-     */
-    public function getParagraph()
-    {
-        return $this->category->getImageTeaserParagraph() ?? '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getButtonLabel()
-    {
-        return $this->category->getImageTeaserButtonLabel() ?? '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getButtonUrl()
-    {
-        return $this->category->getImageTeaserButtonLink() ? $this->customUrlGenerator->generate($this->category->getImageTeaserButtonLink()) : '';
+        return $this->category->getImageTeaserCtaLink() ? $this->customUrlGenerator->generate($this->category->getImageTeaserCtaLink()) : '';
     }
 
     /**
