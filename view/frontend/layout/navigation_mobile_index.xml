@@ -7,7 +7,7 @@
             <arguments>
                 <argument name="type" xsi:type="string">mobile</argument>
             </arguments>
-            <!-- Next icon displayed on the right side of parent items. -->
+            <!-- Next icon displayed on the right side of parent items. By default we generate it with pseudoicons, but for custom icon you still can use SVG, by set display to 'true' -->
             <block class="MageSuite\ThemeHelpers\Block\Icon" name="navigation.offcanvas.icon.next" as="navigation.offcanvas.icon.next">
                 <arguments>
                     <argument name="icon_url" xsi:type="string">images/icons/offcanvas-navigation/icon-next.svg</argument>
@@ -16,7 +16,8 @@
                     <argument name="lazy_loaded" xsi:type="boolean">true</argument>
                 </arguments>
             </block>
-            <!-- Previous icon displayed on the left side of return items. -->
+            <referenceBlock name="navigation.offcanvas.icon.next" display="false" />
+            <!-- Previous icon displayed on the left side of return items. By default we generate it with pseudoicons, but for custom icon you still can use SVG, by set display to 'true' -->
             <block class="MageSuite\ThemeHelpers\Block\Icon" name="navigation.offcanvas.icon.prev" as="navigation.offcanvas.icon.prev">
                 <arguments>
                     <argument name="icon_url" xsi:type="string">images/icons/offcanvas-navigation/icon-prev.svg</argument>
@@ -25,6 +26,7 @@
                     <argument name="lazy_loaded" xsi:type="boolean">true</argument>
                 </arguments>
             </block>
+            <referenceBlock name="navigation.offcanvas.icon.prev" display="false" />
             <block class="Magento\Customer\Block\Account\AuthorizationLink" name="navigation.offcanvas.authorization" template="MageSuite_Navigation::offcanvas/authorization.phtml">
                 <block class="MageSuite\ThemeHelpers\Block\Icon" name="navigation.offcanvas.icon.login">
                     <arguments>
