@@ -90,6 +90,8 @@ class CategoryMapper
         }
 
         $image = $this->category->getImageTeaser();
+        $image = ltrim($image, '/');
+        $image = str_replace('media/catalog/category/', '', $image);
 
         if (is_string($image)) {
             $this->rawImageUrl = 'catalog/category/' . $image;
