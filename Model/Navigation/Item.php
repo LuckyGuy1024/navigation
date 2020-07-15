@@ -39,12 +39,18 @@ class Item extends \Magento\Framework\DataObject
      */
     protected $categoryHelper;
 
+    /**
+     * @var \MageSuite\CategoryIcon\Helper\CategoryIcon
+     */
+    protected $categoryIconHelper;
+
     public function __construct(
         \Magento\Catalog\Api\Data\CategoryInterface $category,
         FeaturedProductsFactory $featuredProductsFactory,
         ImageTeaserFactory $imageTeaserFactory,
         \MageSuite\Navigation\Service\Category\CustomUrlGenerator $customUrlGenerator,
         \MageSuite\Category\Helper\Category $categoryHelper,
+        \MageSuite\CategoryIcon\Helper\CategoryIcon $categoryIconHelper,
         array $data = []
     )
     {
@@ -55,6 +61,7 @@ class Item extends \Magento\Framework\DataObject
         $this->imageTeaserFactory = $imageTeaserFactory;
         $this->customUrlGenerator = $customUrlGenerator;
         $this->categoryHelper = $categoryHelper;
+        $this->categoryIconHelper = $categoryIconHelper;
     }
 
     /**
@@ -187,5 +194,9 @@ class Item extends \Magento\Framework\DataObject
 
     public function getIdentities() {
         return $this->category->getIdentities();
+    }
+
+    public function getCategoryIcon() {
+        return $this->categoryIconHelper->getUrl($this->category);
     }
 }
