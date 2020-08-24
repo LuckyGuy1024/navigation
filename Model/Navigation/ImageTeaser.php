@@ -19,8 +19,7 @@ class ImageTeaser extends \MageSuite\ContentConstructorFrontend\Model\Component\
         \MageSuite\ContentConstructorFrontend\Model\Component\ImageTeaser\SlideFactory $slideFactory,
         \MageSuite\Navigation\Service\Mapper\CategoryMapper $categoryMapper,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($slideFactory, $data);
 
         $this->category = $category;
@@ -29,10 +28,15 @@ class ImageTeaser extends \MageSuite\ContentConstructorFrontend\Model\Component\
 
     public function getData($key = '', $index = null)
     {
-        if($key == 'items'){
-            return $this->categoryMapper->mapCategory($this->category);
+        if ($key == 'items') {
+            return $this->categoryMapper->mapCategory($this->getCategory());
         }
 
         return parent::getData($key, $index);
+    }
+
+    public function getCategory()
+    {
+        return $this->category;
     }
 }
