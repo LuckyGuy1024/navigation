@@ -21,7 +21,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     protected $builder;
 
 
-    public function setUp() {
+    public function setUp(): void {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->builder = $this->objectManager->get(\MageSuite\Navigation\Service\Navigation\Builder::class);
     }
