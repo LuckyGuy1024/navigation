@@ -4,6 +4,9 @@ namespace MageSuite\Navigation\Block;
 
 class Navigation extends \Magento\Framework\View\Element\Template implements \Magento\Framework\DataObject\IdentityInterface
 {
+    const CACHE_KEY_PREFIX = 'NAVIGATION_';
+    const CACHE_GROUP = \MageSuite\Navigation\Model\Cache\Type::TYPE_IDENTIFIER;
+
     const ONE_DAY = 86400;
 
     /**
@@ -20,14 +23,21 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
+
     /**
      * @var \Magento\Framework\Serialize\SerializerInterface
      */
     protected $serializer;
+
     /**
      * @var \Magento\Customer\Model\Session
      */
     protected $session;
+
+    /**
+     * @var \Magento\Framework\Cache\LockGuardedCacheLoader
+     */
+    protected $lockGuardedCacheLoader;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -37,8 +47,7 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
         \Magento\Framework\Serialize\SerializerInterface $serializer,
         \Magento\Customer\Model\Session $session,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->httpContext = $httpContext;
@@ -46,29 +55,33 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
         $this->storeManager = $storeManager;
         $this->serializer = $serializer;
         $this->session = $session;
+        $this->lockGuardedCacheLoader = $context->getLockGuardedCacheLoader();
     }
-    
+
     /**
      * @return \MageSuite\Navigation\Model\Navigation\Item[]
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getItems() {
+    public function getItems()
+    {
         $rootCategoryId = $this->storeManager->getStore()->getRootCategoryId();
 
         $buildedNavigation = $this->navigationBuilder->build($rootCategoryId, $this->getNavigationType());
 
-        $cacheTags = $this->getNavigationTags($buildedNavigation);
-
-        $this->_cache->save($this->serializer->serialize($cacheTags), 'navigation_'.$rootCategoryId.'_'.$this->getNavigationType(), $cacheTags);
-
         return $buildedNavigation;
+    }
+
+    public function getCacheTags()
+    {
+        return [\MageSuite\Navigation\Model\Cache\Type::CACHE_TAG];
     }
 
     /**
      * @return string
      */
-    public function getNavigationType() {
-        if($this->getType() == \MageSuite\Navigation\Service\Navigation\Builder::TYPE_MOBILE) {
+    public function getNavigationType()
+    {
+        if ($this->getType() == \MageSuite\Navigation\Service\Navigation\Builder::TYPE_MOBILE) {
             return \MageSuite\Navigation\Service\Navigation\Builder::TYPE_MOBILE;
         }
 
@@ -90,7 +103,10 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
         ];
     }
 
-    public function getMobileNavigationEndpointUrl() {
+
+
+    public function getMobileNavigationEndpointUrl()
+    {
         return $this->getUrl('navigation/mobile/index');
     }
 
@@ -106,37 +122,74 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
      * @return string[]
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getIdentities(){
-        $rootCategoryId = $this->storeManager->getStore()->getRootCategoryId();
-
-        $cachedTags = $this->_cache->load('navigation_'.$rootCategoryId.'_'.$this->getNavigationType());
-
-        if($cachedTags) {
-            return $this->serializer->unserialize($cachedTags);
-        }
-
-        $navigationItems = $this->getItems();
-
-        return $this->getNavigationTags($navigationItems);
+    public function getIdentities()
+    {
+        return [\MageSuite\Navigation\Model\Cache\Type::CACHE_TAG];
     }
 
     /**
-     * @param \MageSuite\Navigation\Model\Navigation\Item[] $navigationItems
+     * Following methods had to be overriden to modify values for
+     * CACHE_KEY_PREFIX and CACHE_GROUP constants
      */
-    protected function getNavigationTags(array $navigationItems, $aggregatedTags = [\Magento\Catalog\Model\Category::CACHE_TAG])
+    public function getCacheKey()
     {
-        if(empty($navigationItems)) {
-            return $aggregatedTags;
+        if ($this->hasData('cache_key')) {
+            return self::CACHE_KEY_PREFIX . $this->getData('cache_key');
         }
 
-        foreach($navigationItems as $navigationItem) {
-            if($navigationItem->hasSubItems()) {
-                $aggregatedTags = array_merge($aggregatedTags, $this->getNavigationTags($navigationItem->getSubItems(), $aggregatedTags));
+        $key = $this->getCacheKeyInfo();
+        $key = array_values($key);
+        $key = implode('|', $key);
+        $key = hash('sha1', $key);
+
+        return self::CACHE_KEY_PREFIX . $key;
+    }
+
+    protected function _loadCache()
+    {
+        $collectAction = function () {
+            if ($this->hasData('translate_inline')) {
+                $this->inlineTranslation->suspend($this->getData('translate_inline'));
             }
 
-            $aggregatedTags = array_merge($aggregatedTags, $navigationItem->getIdentities());
-        }
+            $this->_beforeToHtml();
+            return $this->_toHtml();
+        };
 
-        return array_unique($aggregatedTags);
+        if ($this->getCacheLifetime() === null || !$this->_cacheState->isEnabled(self::CACHE_GROUP)) {
+            $html = $collectAction();
+            if ($this->hasData('translate_inline')) {
+                $this->inlineTranslation->resume();
+            }
+            return $html;
+        }
+        $loadAction = function () {
+            return $this->_cache->load($this->getCacheKey());
+        };
+
+        $saveAction = function ($data) {
+            $this->_saveCache($data);
+            if ($this->hasData('translate_inline')) {
+                $this->inlineTranslation->resume();
+            }
+        };
+
+        return (string)$this->lockGuardedCacheLoader->lockedLoadData(
+            $this->getCacheKey(),
+            $loadAction,
+            $collectAction,
+            $saveAction
+        );
+    }
+
+    protected function _saveCache($data)
+    {
+        if (!$this->getCacheLifetime() || !$this->_cacheState->isEnabled(self::CACHE_GROUP)) {
+            return false;
+        }
+        $cacheKey = $this->getCacheKey();
+
+        $this->_cache->save($data, $cacheKey, array_unique($this->getCacheTags()), $this->getCacheLifetime());
+        return $this;
     }
 }

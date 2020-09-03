@@ -20,8 +20,7 @@ class Builder implements BuilderInterface
     public function __construct(
         \Magento\Catalog\Api\CategoryRepositoryInterface $categoryRepository,
         \MageSuite\Navigation\Model\Navigation\ItemFactory $itemFactory
-    )
-    {
+    ) {
         $this->itemFactory = $itemFactory;
         $this->categoryRepository = $categoryRepository;
     }

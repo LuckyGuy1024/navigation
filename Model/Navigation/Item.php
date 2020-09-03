@@ -52,8 +52,7 @@ class Item extends \Magento\Framework\DataObject
         \MageSuite\Category\Helper\Category $categoryHelper,
         \MageSuite\CategoryIcon\Helper\CategoryIcon $categoryIconHelper,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($data);
 
         $this->category = $category;
@@ -67,14 +66,16 @@ class Item extends \Magento\Framework\DataObject
     /**
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->category->getId();
     }
 
     /**
      * @param $label string
      */
-    public function setLabel($label) {
+    public function setLabel($label)
+    {
         $this->setData('label', $label);
     }
 
@@ -83,7 +84,7 @@ class Item extends \Magento\Framework\DataObject
      */
     public function getLabel()
     {
-        if($this->hasData('label')){
+        if ($this->hasData('label')) {
             return $this->getData('label');
         }
 
@@ -103,7 +104,7 @@ class Item extends \Magento\Framework\DataObject
      */
     public function getIdentifier()
     {
-        if($this->hasData('identifier')){
+        if ($this->hasData('identifier')) {
             return $this->getData('identifier');
         }
 
@@ -113,7 +114,8 @@ class Item extends \Magento\Framework\DataObject
     /**
      * @return int
      */
-    public function getParentId() {
+    public function getParentId()
+    {
         return $this->category->getParentId();
     }
 
@@ -121,10 +123,11 @@ class Item extends \Magento\Framework\DataObject
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getUrl() {
+    public function getUrl()
+    {
         $customUrl = $this->category->getCategoryCustomUrl();
 
-        if(!$customUrl){
+        if (!$customUrl) {
             return $this->category->getUrl();
         }
 
@@ -134,15 +137,17 @@ class Item extends \Magento\Framework\DataObject
     /**
      * @return int
      */
-    public function getProductCount() {
+    public function getProductCount()
+    {
         return $this->categoryHelper->getProductCount($this->category);
     }
 
     /**
      * @return FeaturedProducts
      */
-    public function getFeaturedProducts() {
-        if(!$this->featuredProducts)  {
+    public function getFeaturedProducts()
+    {
+        if (!$this->featuredProducts) {
             $this->featuredProducts = $this->featuredProductsFactory->create(['category' => $this->category]);
         }
 
@@ -152,8 +157,9 @@ class Item extends \Magento\Framework\DataObject
     /**
      * @return \MageSuite\Navigation\Model\Navigation\ImageTeaser
      */
-    public function getImageTeaser() {
-        if(!$this->imageTeaser)  {
+    public function getImageTeaser()
+    {
+        if (!$this->imageTeaser) {
             $this->imageTeaser = $this->imageTeaserFactory->create(['category' => $this->category]);
         }
 
@@ -163,22 +169,25 @@ class Item extends \Magento\Framework\DataObject
     /**
      * @return bool
      */
-    public function hasFeaturedProducts() {
+    public function hasFeaturedProducts()
+    {
         return !empty($this->getFeaturedProducts()->getProducts());
     }
 
     /**
      * @return bool
      */
-    public function hasSubItems() {
+    public function hasSubItems()
+    {
         return !empty($this->getSubItems());
     }
 
     /**
      * @return bool
      */
-    public function hasImageTeaser() {
-        if($this->category->getLevel() > 2) {
+    public function hasImageTeaser()
+    {
+        if ($this->category->getLevel() > 2) {
             return false;
         }
 
@@ -188,15 +197,18 @@ class Item extends \Magento\Framework\DataObject
     /**
      * @return bool
      */
-    public function hasCustomUrl() {
+    public function hasCustomUrl()
+    {
         return !empty($this->category->getCategoryCustomUrl());
     }
 
-    public function getIdentities() {
+    public function getIdentities()
+    {
         return $this->category->getIdentities();
     }
 
-    public function getCategoryIcon() {
+    public function getCategoryIcon()
+    {
         return $this->categoryIconHelper->getUrl($this->category);
     }
 }

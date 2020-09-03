@@ -18,8 +18,7 @@ class Grid extends \MageSuite\Navigation\Controller\Adminhtml\Category\FeaturedP
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
         \Magento\Framework\View\LayoutFactory $layoutFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->resultRawFactory = $resultRawFactory;
         $this->layoutFactory = $layoutFactory;
@@ -36,6 +35,4 @@ class Grid extends \MageSuite\Navigation\Controller\Adminhtml\Category\FeaturedP
             )->toHtml()
         );
     }
-
-
 }

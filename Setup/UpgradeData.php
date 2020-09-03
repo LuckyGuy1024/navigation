@@ -34,8 +34,7 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
         \Magento\Framework\Setup\ModuleDataSetupInterface $moduleDataSetupInterface,
         \Magento\Eav\Model\Config $eavConfig,
         \MageSuite\Navigation\Migration\AddIncludeInMobileDefaultValue $addIncludeInMobileDefaultValue
-    )
-    {
+    ) {
         $this->eavSetupFactory = $eavSetupFactory;
         $this->moduleDataSetupInterface = $moduleDataSetupInterface;
         $this->eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetupInterface]);
@@ -89,7 +88,7 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
         $includeInMobileAttributeId = $this->eavSetup->getAttributeId(\Magento\Catalog\Model\Category::ENTITY, 'include_in_mobile_navigation');
         $includeInDesktopAttributeId = $this->eavSetup->getAttributeId(\Magento\Catalog\Model\Category::ENTITY, 'include_in_menu');
 
-        if(!$includeInMobileAttributeId or !$includeInDesktopAttributeId){
+        if (!$includeInMobileAttributeId or !$includeInDesktopAttributeId) {
             return false;
         }
 
@@ -100,18 +99,18 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
     {
         $entityType = $this->eavSetup->getEntityTypeId('catalog_category');
 
-        $this->eavSetup->updateAttribute($entityType,'image_teaser_headline','frontend_label','Slogan');
-        $this->eavSetup->updateAttribute($entityType,'image_teaser_headline','attribute_code','image_teaser_slogan');
+        $this->eavSetup->updateAttribute($entityType, 'image_teaser_headline', 'frontend_label', 'Slogan');
+        $this->eavSetup->updateAttribute($entityType, 'image_teaser_headline', 'attribute_code', 'image_teaser_slogan');
 
-        $this->eavSetup->removeAttribute(\Magento\Catalog\Model\Category::ENTITY,'image_teaser_subheadline');
+        $this->eavSetup->removeAttribute(\Magento\Catalog\Model\Category::ENTITY, 'image_teaser_subheadline');
 
-        $this->eavSetup->updateAttribute($entityType,'image_teaser_paragraph','frontend_label','Description');
-        $this->eavSetup->updateAttribute($entityType,'image_teaser_paragraph','attribute_code','image_teaser_description');
+        $this->eavSetup->updateAttribute($entityType, 'image_teaser_paragraph', 'frontend_label', 'Description');
+        $this->eavSetup->updateAttribute($entityType, 'image_teaser_paragraph', 'attribute_code', 'image_teaser_description');
 
-        $this->eavSetup->updateAttribute($entityType,'image_teaser_button_label','frontend_label','CTA Label');
-        $this->eavSetup->updateAttribute($entityType,'image_teaser_button_label','attribute_code','image_teaser_cta_label');
+        $this->eavSetup->updateAttribute($entityType, 'image_teaser_button_label', 'frontend_label', 'CTA Label');
+        $this->eavSetup->updateAttribute($entityType, 'image_teaser_button_label', 'attribute_code', 'image_teaser_cta_label');
 
-        $this->eavSetup->updateAttribute($entityType,'image_teaser_button_link','frontend_label','CTA target link');
-        $this->eavSetup->updateAttribute($entityType,'image_teaser_button_link','attribute_code','image_teaser_cta_link');
+        $this->eavSetup->updateAttribute($entityType, 'image_teaser_button_link', 'frontend_label', 'CTA target link');
+        $this->eavSetup->updateAttribute($entityType, 'image_teaser_button_link', 'attribute_code', 'image_teaser_cta_link');
     }
 }

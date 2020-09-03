@@ -30,8 +30,7 @@ class FeaturedProducts
         \Magento\Catalog\Model\ResourceModel\Category $categoryResource,
         \Magento\Framework\Json\DecoderInterface $jsonDecoder,
         \Magento\Catalog\Model\Config $catalogConfig
-    )
-    {
+    ) {
         $this->productsCollectionFactory = $productsCollectionFactory;
         $this->categoryResource = $categoryResource;
         $this->jsonDecoder = $jsonDecoder;
@@ -62,7 +61,7 @@ class FeaturedProducts
                 ->getAttributeRawValue($category->getId(), 'featured_products', 0);
         }
 
-        if (!$featuredProducts OR $featuredProducts == '{}') {
+        if (!$featuredProducts or $featuredProducts == '{}') {
             return [];
         }
 

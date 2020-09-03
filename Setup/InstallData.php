@@ -22,8 +22,7 @@ class InstallData implements \Magento\Framework\Setup\InstallDataInterface
     public function __construct(
         \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory,
         \Magento\Framework\Setup\ModuleDataSetupInterface $moduleDataSetupInterface
-    )
-    {
+    ) {
         $this->eavSetupFactory = $eavSetupFactory;
         $this->moduleDataSetupInterface = $moduleDataSetupInterface;
 
@@ -33,8 +32,7 @@ class InstallData implements \Magento\Framework\Setup\InstallDataInterface
     public function install(
         \Magento\Framework\Setup\ModuleDataSetupInterface $setup,
         \Magento\Framework\Setup\ModuleContextInterface $context
-    )
-    {
+    ) {
         if (!$this->eavSetup->getAttributeId(\Magento\Catalog\Model\Category::ENTITY, 'category_custom_url')) {
             $this->eavSetup->addAttribute(
                 \Magento\Catalog\Model\Category::ENTITY,
@@ -78,7 +76,7 @@ class InstallData implements \Magento\Framework\Setup\InstallDataInterface
             'image_teaser_button_link' => ['label' => 'Button Link', 'type' => 'varchar', 'input' => 'text', 'sort_order' => 60]
         ];
 
-        foreach($attributes AS $attributeCode => $attribute){
+        foreach ($attributes as $attributeCode => $attribute) {
             if (!$this->eavSetup->getAttributeId(\Magento\Catalog\Model\Category::ENTITY, $attributeCode)) {
                 $this->eavSetup->addAttribute(
                     \Magento\Catalog\Model\Category::ENTITY,

@@ -32,8 +32,7 @@ class FeaturedProducts extends \Magento\Backend\Block\Widget\Grid\Extended
         \Magento\Framework\Registry $coreRegistry,
         \Magento\Framework\Json\DecoderInterface $jsonDecoder,
         array $data = []
-    )
-    {
+    ) {
         $this->categoryRepository = $categoryRepository;
         $this->productFactory = $productFactory;
         $this->coreRegistry = $coreRegistry;
@@ -52,7 +51,7 @@ class FeaturedProducts extends \Magento\Backend\Block\Widget\Grid\Extended
     public function getCategory()
     {
         $category = $this->coreRegistry->registry('category');
-        if(!$category){
+        if (!$category) {
             $category = $this->categoryRepository->get(
                 $this->getRequest()->getParam('id', 2),
                 $this->getRequest()->getParam('store', 0)
@@ -162,8 +161,8 @@ class FeaturedProducts extends \Magento\Backend\Block\Widget\Grid\Extended
             $featuredProducts = $this->getCategory()->getFeaturedProducts();
         }
 
-        if ($featuredProducts){
-            if(is_string($featuredProducts)) {
+        if ($featuredProducts) {
+            if (is_string($featuredProducts)) {
                 $featuredProducts = $this->jsonDecoder->decode($featuredProducts);
             }
 
