@@ -102,9 +102,7 @@ class Navigation extends \Magento\Framework\View\Element\Template implements \Ma
             $this->httpContext->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH)
         ];
     }
-
-
-
+    
     public function getMobileNavigationEndpointUrl()
     {
         return $this->getUrl('navigation/mobile/index');
