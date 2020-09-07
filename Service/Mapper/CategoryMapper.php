@@ -32,8 +32,7 @@ class CategoryMapper
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \MageSuite\Navigation\Service\Category\CustomUrlGenerator $customUrlGenerator,
         \MageSuite\Media\Service\SrcSetResolver $srcSetResolver
-
-    ){
+    ) {
         $this->mediaResolver = $mediaResolver;
         $this->storeManager = $storeManager;
         $this->customUrlGenerator = $customUrlGenerator;
@@ -42,7 +41,7 @@ class CategoryMapper
 
     public function mapCategory($category)
     {
-        if(!$category->getImageTeaser()){
+        if (!$category->getImageTeaser()) {
             return [];
         }
 
@@ -74,7 +73,7 @@ class CategoryMapper
     {
         $rawImageUrl = $this->getRawImageUrl();
 
-        if(empty($rawImageUrl)){
+        if (empty($rawImageUrl)) {
             return null;
         }
 
@@ -85,7 +84,7 @@ class CategoryMapper
 
     public function getRawImageUrl()
     {
-        if(!empty($this->rawImageUrl)){
+        if (!empty($this->rawImageUrl)) {
             $this->rawImageUrl;
         }
 

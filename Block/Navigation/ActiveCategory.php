@@ -10,13 +10,12 @@ class ActiveCategory extends \Magento\Framework\View\Element\Template
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
         array $data = []
-    )
-    {
+    ) {
         $this->registry = $registry;
 
         parent::__construct($context, $data);
     }
-    
+
     public function getActiveCategoryPath()
     {
         /** @var \Magento\Catalog\Model\Category $currentCategory */
@@ -28,7 +27,7 @@ class ActiveCategory extends \Magento\Framework\View\Element\Template
 
         $categoryPath = $currentCategory->getPath();
 
-        return $this->removeRootCategoryFromPath($categoryPath);;
+        return $this->removeRootCategoryFromPath($categoryPath);
     }
 
     private function removeRootCategoryFromPath($categoryPath)

@@ -30,7 +30,7 @@ class AddIncludeInMobileDefaultValue
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\EntityManager\MetadataPool $metadataPool,
         \Psr\Log\LoggerInterface $logger
-    ){
+    ) {
         $this->connection = $resourceConnection->getConnection();
         $this->storeManager = $storeManager;
         $this->logger = $logger;
@@ -49,7 +49,7 @@ class AddIncludeInMobileDefaultValue
         $storeIds = array_keys($stores);
         sort($storeIds);
 
-        foreach($storeIds as $storeId){
+        foreach ($storeIds as $storeId) {
             $query = "INSERT IGNORE INTO $categoryEntityIntTable (attribute_id, store_id, $linkField, value)
               SELECT
                 $includeInMobileAttributeId AS attribute_id,
@@ -60,9 +60,9 @@ class AddIncludeInMobileDefaultValue
               LEFT JOIN $categoryEntityIntTable AS category_int ON category.$linkField = category_int.$linkField
               WHERE category_int.attribute_id = $includeInDesktopAttributeId AND store_id = $storeId;";
 
-            try{
+            try {
                 $this->connection->query($query);
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 $message = sprintf('Error during AddIncludeInMobileDefaultValue::execute(): %s, storeId: %s', $e->getMessage(), $storeId);
                 $this->logger->warning($message);
             }

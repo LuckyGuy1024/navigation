@@ -14,8 +14,9 @@ class CustomUrlGenerator
         $this->storeManager = $storeManager;
     }
 
-    public function generate($url) {
-        if(strpos($url, 'http') !== false){
+    public function generate($url)
+    {
+        if (strpos($url, 'http') !== false) {
             return $url;
         }
 
