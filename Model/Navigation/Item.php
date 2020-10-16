@@ -209,6 +209,11 @@ class Item extends \Magento\Framework\DataObject
 
     public function getCategoryIcon()
     {
-        return $this->categoryIconHelper->getUrl($this->category);
+        return $this->categoryIconHelper->getUrl($this->getCategory());
+    }
+
+    public function getCategory()
+    {
+        return $this->category;
     }
 }
