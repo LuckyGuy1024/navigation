@@ -1,0 +1,10 @@
+ID,ID
+Name,Naam
+SKU,Art.nr.
+Price,Prijs
+Position,Positie
+"Something went wrong while getting the image url.","Er ging iets mis bij het ophalen van de afbeelding url."
+Configuration,Configuratie
+Image,Afbeelding
+Description,Omschrijving
+Header,Header

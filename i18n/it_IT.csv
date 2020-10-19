@@ -1,0 +1,10 @@
+ID,ID
+Name,Nome
+SKU,SKU
+Price,Prezzo
+Position,Posizione
+"Something went wrong while getting the image url.","Qualcosa non ha funzinato mentre reperivo l'url dell'immagine."
+Configuration,Configurazione
+Image,Immagine
+Description,Descrizione
+Header,Intestazione
