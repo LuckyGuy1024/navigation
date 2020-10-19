@@ -6,6 +6,7 @@
         <block class="MageSuite\Navigation\Block\Navigation" name="navigation.offcanvas" template="MageSuite_Navigation::offcanvas/drawer.phtml">
             <arguments>
                 <argument name="type" xsi:type="string">mobile</argument>
+                <argument name="show_category_icon_subcats" xsi:type="boolean">false</argument>
             </arguments>
             <!-- Next icon displayed on the right side of parent items. By default we generate it with pseudoicons, but for custom icon you still can use SVG, by set display to 'true' -->
             <block class="MageSuite\ThemeHelpers\Block\Icon" name="navigation.offcanvas.icon.next" as="navigation.offcanvas.icon.next">
