@@ -6,4 +6,19 @@
                 sortOrder="10"
         />
     </type>
+
+    <virtualType name="Magento\Catalog\CategoryImageUpload" type="Magento\Catalog\Model\ImageUploader">
+        <arguments>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="svg" xsi:type="string">svg</item>
+            </argument>
+            <argument name="allowedMimeTypes" xsi:type="array">
+                <item name="svg" xsi:type="string">image/svg+xml</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\MediaStorage\Model\File\Validator\NotProtectedExtension">
+        <plugin name="allow_svg_file_type_image_for_category" type="MageSuite\Navigation\Plugin\MediaStorage\Model\File\Validator\NotProtectedExtension\AllowSvgFileTypeImageForCategory"/>
+    </type>
 </config>
