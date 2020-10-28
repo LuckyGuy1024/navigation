@@ -15,6 +15,9 @@
             <argument name="allowedMimeTypes" xsi:type="array">
                 <item name="svg" xsi:type="string">image/svg+xml</item>
             </argument>
+            <argument name="allowedMimeTypes" xsi:type="array">
+                <item name="svg" xsi:type="string">image/svg</item>
+            </argument>
         </arguments>
     </virtualType>
 
