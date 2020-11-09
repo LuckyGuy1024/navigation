@@ -51,7 +51,7 @@ class Builder implements BuilderInterface
         $navigationItem = $this->itemFactory->create(['category' => $category]);
         $subItems = [];
 
-        if (!$category->hasChildren()) {
+        if (!$category->getChildrenCount()) {
             $navigationItem->setSubItems([]);
 
             return $navigationItem;
