@@ -111,7 +111,6 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
-     * @magentoAppArea frontend
      * @magentoDataFixture Magento/Catalog/_files/categories.php
      * @magentoDataFixture loadCategoriesWithCustomAttributes
      */
